@@ -1,78 +1,83 @@
-import React from "react";
+import React from 'react'
+// import './Form.css'
 
-export default function UsersForm(props) {
-    const {values,change,submit,disabled,errors} = props;
+function UsersForm(props) {  
+    const {
+        values,
+        submit,
+        change,
+        disabled,
+        errors,
+      } = props
 
-    const onSubmit = (evt) => {
-        evt.preventDefault();
-        submit();
-      };
+      const onSubmit = (e) => {
+        (e).preventDefault()
+        submit()
+      }
 
-      const onChange = (evt) => {
-        /* 🔥 FIX THIS SO IT ALSO WORKS WITH CHECKBOXES */
-        const { name, value, type, checked } = evt.target;
-        const valueToUse = type === "checkbox" ? checked : value;
-        change(name, valueToUse);
-      };
+    const onChange = (e) => {
+        const {name,value,type,checked} = (e).target
+        {/* ////////// FOR CHECKBOX TO WORK ////////// */}
+        const valueToUse = type === 'checkbox' ? checked : value
+        change(name, valueToUse)
+    }
     
-
     return (
-      <form className = 'formContainer' onSubmit={onSubmit}>
-          <div className = 'formGroupSubmit'>
-          <div className="errors">
+      <form className='form container' onSubmit={onSubmit}>
+
+        <div className = 'formSubmit'>
+          <button id ="submitBtn"disabled={disabled}>submit</button>
+
+          <div className='errors'>
           {/* 🔥 RENDER THE VALIDATION ERRORS HERE */}
           <div>{errors.name}</div>
           <div>{errors.email}</div>
           <div>{errors.password}</div>
+          
         </div>
-              <h1>Add a User</h1>
-              <div className= 'nameContainer'>
-                <label>
-                    name&nbsp;
+        </div>
+
+          <div className='form-group inputs'>
+              {/* ////////// TEXT INPUTS ////////// */}
+                <label>name&nbsp;
+                <input
+                    value={values.name}
+                    onChange={onChange}
+                    name='first_name'
+                    type='text'
+                />
+                </label>
+
+                <label>Email
+                <input
+                    value={values.email}
+                    onChange={onChange}
+                    name='email'
+                    type='text'
+                />
+                </label>
+
+                <label>password
                     <input
-                        value={values.name}
-                        onChange={onChange}
-                        name="name"
-                        type="text"
+                    value={values.password}
+                    onChange={onChange}
+                    name='password'
+                    type='text'
                     />
                 </label>
-              </div>
-              <div className= 'emailContainer'>
-              <label>
-                    email&nbsp;
-                    <input
-                        value={values.email}
+                {/* ////////// CHECKBOXES ////////// */}
+                <label>Term of Service
+                    <input 
+                        type='checkbox'
+                        name='termOfService'
                         onChange={onChange}
-                        name="email"
-                        type="email"
+                        checked={values.termOfService}
                     />
                 </label>
-              </div>
-              <div className= 'passwordContainer'>
-              <label>
-                    password&nbsp;
-                    <input
-                        value={values.password}
-                        onChange={onChange}
-                        name="password"
-                        type="text"
-                    />
-                </label>
-              </div>
-              <div className = 'tosContainer'>
-                <label>
-                    Terms of Service
-                    <input
-                        type="checkbox"
-                        name="tos"
-                        checked={values.tos}
-                        onChange={onChange}
-                    />
-                </label>
-              </div>
           </div>
-          <button disabled={disabled}>submit</button>
       </form>
     );
   }
+  
+  export default UsersForm;
   

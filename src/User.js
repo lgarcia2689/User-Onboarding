@@ -1,19 +1,35 @@
 import React from 'react'
 
+function User({ details }) {
+  // if (!details) {
+  //   return <h3>Working fetching your users&apos;s details...</h3>
+  // }
 
-function User({details}) {
-    if (!details) {
-        return <h3>Working fetching your user&apos;s details...</h3>
-      }
-      return (
-        <div className='UserContainer'>
-          <h2>{details.first_name}</h2>
-          <p>Email: {details.email}</p>
-         
+  return (
+    <div className='user container'>
+      {details.map(detail => {
+        return (
+          <div>
+        <p>Name: {detail.first_name}</p>
+        <p>Email: {detail.email}</p>
+        <p>Password: {detail.id}</p>
         </div>
-        
-      )
-  }
-  
-  export default User
-  
+        )
+      })}
+      
+      
+      {/* {
+        !!details.termOfService && !!details.termOfService.length &&
+        <div>
+          Term of Service:
+          
+            {details.termOfService.map((like, idx) => <li key={idx}>{like}</li>)}
+          
+        </div>
+      } */}
+
+    </div>
+  )
+}
+
+export default User

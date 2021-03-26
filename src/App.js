@@ -1,87 +1,86 @@
 import './App.css';
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import * as yup from "yup";
-import UsersForm from './UsersForm'
-import schema from './validation/formSchema'
+import React, {useState, useEffect} from 'react'
 import User from './User'
+import UsersForm from './UsersForm'
+import * as yup from 'yup'
+import axios from "axios";
+import formSchema from './validation/formSchema';
 
 const initialFormValues = {
   ///// TEXT INPUTS /////
-  name: "",
-  email: "",
-  password: "",
+  first_name:'',
+  email:'',
+  password:'',
   ///// CHECKBOXES /////
-  tos: false,
-};
+  termOfService: false,
+}
 const initialFormErrors = {
-  name: "",
-  email: "",
-  password: "",
-  tos: "",
-};
-
-const initialUsers = [];
-const initialDisabled = true;
+  ///// TEXT INPUT ERRORS /////
+  first_name:'',
+  email:'',
+  password:'',
+}
+const initialUser = []
+const initialDisabled = true
 
 function App() {
 
-  const [users, setUsers] = useState(initialUsers); // array of friend objects
-  const [formValues, setFormValues] = useState(initialFormValues); // object
-  const [formErrors, setFormErrors] = useState(initialFormErrors); // object
-  const [disabled, setDisabled] = useState(initialDisabled); // boolean
+  //////////////// STATES ////////////////
+  const [user, setUser] = useState(initialUser)
+  const [formValues, setFormValues] = useState(initialFormValues) // object
+  const [formErrors, setFormErrors] = useState(initialFormErrors) // object
+  const [disabled, setDisabled] = useState(initialDisabled)
 
-  const getUsers = () => {
-    axios
-    .get('https://reqres.in/api/users')
-    .then((res) => {
-      setUsers(res.data.data)
+
+
+
+
+  const getUser = () => {
+    axios.get('https://reqres.in/api/users')
+    .then(res=> {
+      setUser(res.data.data)
+      console.log(res.data.data)
     })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
-  
-
-  const postNewUser = (newUser) => {
-    axios
-    .post('https://reqres.in/api/users',newUser)
-    .then((res) => {
-      setUsers([res.data.data, ...users]);
-      setFormValues(initialFormValues);
+    .catch(err=> {
+      console.log(err)
     })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
-
-  const inputChange = (name, value) => {
    
-    yup
-      .reach(schema, name) 
-      .validate(value)
-      .then(() => {
-        setFormErrors({
-          ...formErrors,
-          [name]: "",
-        });
-      })
-      .catch((err) => {
-        setFormErrors({
-          ...formErrors,
-          [name]: err.errors[0],
-        });
-      });
+  }
+
+  const postNewUser= newUser => {
+    axios.post('https://reqres.in/api/users',newUser)
+    .then(res => {
+      setUser([res.data, ...user])
+    })
+    .catch(err => {
+      console.log(err);
+    })
+    setFormValues(initialFormValues)
+  }
+
+
+
+
+
+
+  const inputChange = (first_name,value) => {
+    yup.reach(formSchema, first_name)
+    .validate(value)
+    .then(()=>{
+      setFormErrors({...formErrors,[first_name]: ''})
+    })
+    .catch(err => {
+      setFormErrors({...formErrors, [first_name]: err.errors[0]})
+    })
     setFormValues({
       ...formValues,
-      [name]: value,
-    });
-  };
+      [first_name]: value
+    })
+  }
 
-
-  const formSubmit = () => {
+  const formSubmit = () =>{
     const newUser = {
-      name: formValues.name.trim(),
+      first_name: formValues.first_name.trim(),
       email: formValues.email.trim(),
       password: formValues.password.trim(),
     }
@@ -89,31 +88,31 @@ function App() {
   }
 
   useEffect(() => {
-    getUsers();
-  },[]);
+    getUser()
+  }, [])
 
   useEffect(() => {
-    schema.isValid(formValues).then((valid) => {
-      setDisabled(!valid)
-    });
-  },[formValues])
+    formSchema.isValid(formValues).then(valid => setDisabled(!valid))
+  }, [formValues])
+
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <a>
-          Learn React
-        </a>
-        <UsersForm
-        values={formValues}
-        change={inputChange}
-        submit={formSubmit}
-        disabled={disabled}
-        errors={formErrors}/>
-      </header>
-      {users.map((user) => {
-        return <User key ={users.id} details = {users}/>;
-      })}
+    <div classfirst_name="container">
+      
+      <UsersForm
+      values={formValues}
+      change={inputChange}
+      submit={formSubmit}
+      disabled={disabled}
+      errors={formErrors}
+      />
+        
+          
+            
+              <User key={user.id} details={user}/>
+            
+          
+        
     </div>
   );
 }
